@@ -74,7 +74,7 @@ var app = http.createServer(function(request,response){
                 </form>
                 `);
             response.writeHead(200);
-            response.end(template);body
+            response.end(template);
         });
     } else if (pathname === '/create_process') {
         var body = '';
@@ -85,15 +85,16 @@ var app = http.createServer(function(request,response){
             var post = qs.parse(body);
             var title = post.title;
             var description = post.description;
-            console.log(post);
+            // console.log(post); // { title: '', description: '' }
+            fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+                response.writeHead(302, {Location: `/?id=${title}`});
+                response.end();
+
+            })
         });
-        response.writeHead(200);
-        response.end('success');
     } else {
         response.writeHead(404);
         response.end('Not found');
     }
-
-
 });
 app.listen(3000);
